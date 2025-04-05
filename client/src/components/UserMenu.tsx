@@ -5,9 +5,17 @@ import { AiOutlineMenu } from "react-icons/ai";
 import Avatar from "./Avatar";
 import MenuItems from "./MenuItems";
 import useRegisterModal from '../hooks/useRegisterModal'
+import useLoginModal from "@/hooks/useLoginModal";
+import { User } from "@prisma/client";
+import { signOut } from "next-auth/react";
 
-const UserMenu = () => {
+interface UserMenuProps {
+  currentUser?: User | null
+}
+
+const UserMenu = ({ currentUser }: UserMenuProps) => {
   const registerModal = useRegisterModal()
+  const loginModal = useLoginModal()
   const [isOpen, setIsOpen] = useState(false);
   //dun useCallBack de ghi nho no vao memory tranh tao lai khi re-render
   const toggleOpen = useCallback(() => {
@@ -39,10 +47,22 @@ const UserMenu = () => {
       
       {isOpen && (
         <div className="absolute cursor-pointer rounded-xl shadow-md w-[40vw] md:w-3/4 bg-white overflow-hidden right-0 top-12 text-sm">
-            <>
-            <MenuItems onClick={() => {}} label="Login"></MenuItems>
-            <MenuItems onClick={registerModal.onOpen} label="Sign up"></MenuItems>
-            </>
+            {currentUser ? (
+              <>
+                <MenuItems onClick={()=>{}} label="My Trips"></MenuItems>
+                <MenuItems onClick={()=>{}} label="My Favorite"></MenuItems>
+                <MenuItems onClick={()=>{}} label="My Reservation"></MenuItems>
+                <MenuItems onClick={()=>{}} label="My Properties"></MenuItems>
+                <hr></hr>
+                <MenuItems onClick={()=>{}} label="Airbnb My Home"></MenuItems>
+                <MenuItems onClick={signOut} label="LogOut"></MenuItems>
+              </>
+            ) : (
+              <>
+                <MenuItems onClick={loginModal.onOpen} label="Login"></MenuItems>
+                <MenuItems onClick={registerModal.onOpen} label="Sign up"></MenuItems>
+              </>
+            )}
         </div>
       ) }
       </div>
