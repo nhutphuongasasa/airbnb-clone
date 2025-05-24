@@ -9,7 +9,7 @@ interface IParams {
 }
 
 export async function getReservations(params: IParams) {
-    const { listingId, userId, authorId } = params
+    const { listingId, userId, authorId } = await params
 
     const query: any = {}
 
@@ -22,7 +22,7 @@ export async function getReservations(params: IParams) {
     }
 
     if( authorId){
-        query.authorId = { userId: authorId }//nguoi so huu
+        query.listing = { userId: authorId }//nguoi so huu
     }
 
     try {
@@ -51,6 +51,6 @@ export async function getReservations(params: IParams) {
 
         return safeReservations
     } catch (error) {
-        throw new error()
+        throw new Error
     }
 }

@@ -39,7 +39,7 @@ const ImageUpLoad = ({ onChange, value }: ImageUpLoadProps) => {
   //     onSuccess={handleUpLoad}
   //     signatureEndpoint={"/api/sign-cloudinary-params"}
   //     options={{
-  //       maxFiles: 1,
+  //       maxFiles: 5,
   //       clientAllowedFormats: ['jpg', 'jpeg', 'png', 'gif'],
   //       maxFileSize: 5000000,
   //     }}

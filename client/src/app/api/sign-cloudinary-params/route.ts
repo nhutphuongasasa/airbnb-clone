@@ -59,9 +59,9 @@ if (!cloudinary.config().cloud_name) {
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
-    console.log(formData)
+    // console.log(formData)
     const files = formData.getAll('images') as File[];
-    console.log("api"+files)
+    // console.log("api"+files)
 
     
     const uploadedUrls = await Promise.all(
@@ -87,5 +87,23 @@ export async function POST(request: Request) {
       { error: 'Upload failed' +error},
       { status: 500 }
     );
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const body = await request.json();
+    const { urlImage } = body;
+
+    await Promise.all(
+      urlImage.map(async (publicId: string) => {
+        await cloudinary.uploader.destroy(publicId);
+      })
+    );
+
+    return NextResponse.json({ message: 'Deleted successfully' });
+
+  } catch (error) {
+    throw new Error("something went wrong in delete image")
   }
 }

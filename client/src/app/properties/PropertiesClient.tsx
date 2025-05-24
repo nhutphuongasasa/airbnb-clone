@@ -3,30 +3,30 @@
 import Container from '@/components/Container'
 import Heading from '@/components/Heading'
 import ListingCard from '@/components/ListingCard'
-import { SafeReservation, SafeUser } from '@/types'
+import { safeListing, SafeReservation, SafeUser } from '@/types'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useState } from 'react'
 import toast from 'react-hot-toast'
 
-interface TripsClientProps {
+interface PropertiesClientProps {
   currentUser?: SafeUser | undefined,
-  reservations: SafeReservation[]
+  listings: safeListing[]
 }
 
-const TripsClient = ({
+const PropertiesClient = ({
   currentUser,
-  reservations
-}: TripsClientProps) => {
+  listings
+}: PropertiesClientProps) => {
   const router = useRouter()
   const [deletingId, setDeletingId] = useState('')
 
   const onCancel= useCallback((id: string) => {
     setDeletingId(id)
 
-    axios.delete(`/api/reservations/${id}`)
+    axios.delete(`/api/listings/${id}`)
     .then(() => {
-      toast.success("Reservation deleted")
+      toast.success("Listing deleted")
       router.refresh()
     })
     .catch((error) => {
@@ -51,15 +51,14 @@ const TripsClient = ({
         2xl:grid-cols-6
         gap-8
       '>
-        {reservations.map((reservation: SafeReservation) => (
+        {listings.map((listing: safeListing) => (
           <ListingCard
-            key={reservation.id}
-            data={reservation.listing}
-            reservation={reservation}
-            actionId={reservation.id}
+            key={listing.id}
+            data={listing}
+            actionId={listing.id}
             onAction={onCancel}
-            disabled={deletingId === reservation.id}
-            actionLabel="Cancel Reservation"
+            disabled={deletingId === listing.id}
+            actionLabel="Delete property"
             currentUser={currentUser}
           ></ListingCard>
         ))}
@@ -68,4 +67,4 @@ const TripsClient = ({
   )
 }
 
-export default TripsClient
+export default PropertiesClient

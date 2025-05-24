@@ -27,6 +27,7 @@ const HeaderButton = ({
         hover:opacity-80
         transition
         cursor-pointer
+        z-20
       '>
       <AiOutlineHeart
         size={28}
@@ -36,13 +37,13 @@ const HeaderButton = ({
           -top-[2px]
           -right-[2px]
         '>
+        </AiOutlineHeart>
         <AiFillHeart 
           size={24}
           className={
             hasFavorited ? 'fill-rose-500' : 'fill-neutral-500/70'
           }
         ></AiFillHeart>
-      </AiOutlineHeart>
     </div>
   )
 }

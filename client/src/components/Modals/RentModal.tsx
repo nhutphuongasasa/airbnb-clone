@@ -243,11 +243,9 @@ const RentModal = () => {
         ></Heading>
         <ImageUpLoad
           value={imageSrc}
-          onChange={(value) => {
-
-            setCustomValue('imageSrc', [...imageSrc, value])
-            const a =imageSrc.length
-            toast.error(a.toString())
+          onChange={(value) => {setCustomValue('imageSrc', [...imageSrc, value])
+            // const a =imageSrc.length
+            // toast.error(a.toString())
           }}
         ></ImageUpLoad>
       </div>
