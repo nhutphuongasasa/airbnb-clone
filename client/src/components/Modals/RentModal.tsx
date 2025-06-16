@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Modal from './Modal'
 import useRentModal from '../../hooks/useRentModel'
 import Heading from '../Heading'
@@ -16,6 +16,7 @@ import Input from '../inputs/Input'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
+import userUserStore from '@/hooks/useUser'
 
 enum STEPS {
     CATEGORY = 0,
@@ -26,7 +27,12 @@ enum STEPS {
     PRICE = 5
 }
 
+// const userStore = userUserStore()
+
 const RentModal = () => {
+  const currentUser = userUserStore(state => state.currentUser)
+
+  
   const rentModal = useRentModal()
 
   const router = useRouter()
@@ -46,6 +52,7 @@ const RentModal = () => {
     reset
   } = useForm<FieldValues>({
     defaultValues: {
+      userId: '',
       category: '',
       location: null,
       guestCount: 1,
@@ -65,10 +72,11 @@ const RentModal = () => {
   const bathroomCount = watch('bathroomCount')
   const imageSrc = watch('imageSrc') as File[]
 
+  
   const Map = useMemo(() => dynamic(() => import('../Map'),{
     ssr: false
   }), [location])
-
+  
   //id dai dien cho cac field trong form id= category thi truyen gia tri cho category
   const setCustomValue = (id: string, value: any) => {
     setValue(id, value, {
@@ -77,6 +85,12 @@ const RentModal = () => {
       shouldValidate:true
     })
   }
+  
+  useEffect(() => {
+    if (currentUser?.id) {
+      setCustomValue('userId', currentUser.id)
+    }
+  }, [currentUser?.id])
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (step !== STEPS.PRICE){
@@ -115,7 +129,12 @@ const RentModal = () => {
 
     setIsLoading(true)
 
-    axios.post('/api/listings', data)
+    console.log(currentUser)
+    toast(currentUser.id)
+
+
+    // axios.post('/api/listings', data)
+    axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/listing`, data)
     .then(() => {
       toast.success("Listings Created")
       router.refresh()
@@ -300,6 +319,8 @@ const RentModal = () => {
       </div>
     )
   }
+
+  
 
   return (
     <Modal

@@ -10,14 +10,21 @@ import { signOut } from "next-auth/react";
 import { SafeUser } from "@/types";
 import useRentModal from "../hooks/useRentModel";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import logout from "@/app/actions/logout";
+import toast from "react-hot-toast";
+import { set } from "date-fns";
+import { el, ro } from "date-fns/locale";
+import userUserStore from "@/hooks/useUser";
 
 interface UserMenuProps {
   currentUser?: SafeUser | null
 }
 
-const UserMenu = ({ currentUser }: UserMenuProps) => {
+const UserMenu = ({ currentUse1r }: UserMenuProps) => {
   const router = useRouter()
-  
+  const userStore = userUserStore()
+  const currentUser = userUserStore(state => state.currentUser)
   const rentModal = useRentModal()
   const registerModal = useRegisterModal()
   const loginModal = useLoginModal()
@@ -40,6 +47,26 @@ const UserMenu = ({ currentUser }: UserMenuProps) => {
 //vi vay khi dang nhap xong moi khong hien RentModal
 //khi click vao se chay onrent lan dau tien nen xuat hien rentModal
 //va close RentModal khong lien quan den onclick(onRent) nen se khong cha lai
+
+const handleLogout = async () => {
+  try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/logout`, {}, {
+          withCredentials: true
+      });
+      console.log("Logout response:", res.data);
+      if( res.status === 200) {
+        toast.success("LogOut successfully!");
+        userStore.onClear()
+        // window.location.reload()
+        setIsOpen(false);
+      }else {
+        toast.error("error");
+      }
+  } catch (error) {
+      console.error("Logout error:", error); // Log lỗi chi tiết
+      // toast.error("Lỗi khi đăng xuất: " + error.message);
+  }
+};
   return (
     <div>
       <div className="relative z-20">
@@ -49,7 +76,7 @@ const UserMenu = ({ currentUser }: UserMenuProps) => {
             onClick={onRent}
             className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer "
           >
-            Airbnb your home
+            {`Airbnb your home`}
           </div>
           <div
             onClick={() => {
@@ -59,7 +86,7 @@ const UserMenu = ({ currentUser }: UserMenuProps) => {
           >
             <AiOutlineMenu />
             <div className="hidden md:block">
-              <Avatar src={currentUser?.image}/>
+              <Avatar src={currentUser?.images}/>
             </div>
           </div>
         </div>
@@ -72,9 +99,9 @@ const UserMenu = ({ currentUser }: UserMenuProps) => {
                 <MenuItems onClick={()=> router.push("/favorites")} label="My Favorite"></MenuItems>
                 <MenuItems onClick={()=> router.push("/reservations")} label="My Reservation"></MenuItems>
                 <MenuItems onClick={()=> router.push("/properties")} label="My Properties"></MenuItems>
-                <MenuItems onClick={rentModal.onOpen} label="Airbnb My Home"></MenuItems>
+                <MenuItems onClick={rentModal.onOpen } label="Airbnb My Home"></MenuItems>
                 <hr></hr>
-                <MenuItems onClick={signOut} label="LogOut"></MenuItems>
+                <MenuItems onClick={handleLogout} label="LogOut"></MenuItems>
               </>
             ) : (
               <>

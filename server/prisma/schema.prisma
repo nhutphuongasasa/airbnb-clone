@@ -27,6 +27,7 @@ model User {
   accounts Account[]
   listings Listing[]
   reservations Reservation[]
+  // payments Payment[]
 }
 
 model Account {
@@ -78,3 +79,20 @@ model Reservation {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
 }
+
+model Payment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String 
+  orderId        String   // vnp_TxnRef
+  amount         Float    // Đơn vị: VND
+  orderInfo      String   // vnp_OrderInfo
+  bankCode       String   // vnp_BankCode
+  payDate        String   // vnp_PayDate (yyyyMMddHHmmss)
+  transactionNo  String   @unique // vnp_TransactionNo
+  cardType       String   // vnp_CardType
+  status         String   // SUCCESS | FAILED
+  createdAt      DateTime @default(now())
+
+  // user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+

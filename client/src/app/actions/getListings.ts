@@ -14,6 +14,8 @@ export interface IListingsParams {
 export default async function getListings(
   params: IListingsParams) {
   try {
+    const resolvedParams = await params; // Thêm dòng này nếu params là Promise
+console.log("get lsitinh")
     const {
       userId,
       guestCount,
@@ -22,8 +24,8 @@ export default async function getListings(
       startDate,
       endDate,
       locationValue,
-      category
-    } = params
+      category,
+    } = resolvedParams || params;
 
     let query: any = {}
 
@@ -88,6 +90,7 @@ export default async function getListings(
       ...listing,
       createAt: listing.createAt.toISOString(),
     }));
+    // console.log(listings)
 
     return safeListings;
   } catch (error: any) {

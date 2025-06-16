@@ -65,6 +65,8 @@ const ListingClient = ({
 
         setIsLoading(true)
 
+        axios.get('/api/create_payment_url')
+
         axios.post('/api/reservations', {
             totalPrice,
             startDate: dateRange.startDate,

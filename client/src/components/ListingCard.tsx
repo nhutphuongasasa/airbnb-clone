@@ -3,12 +3,13 @@
 import { Reservation } from '@prisma/client'
 import React, { useCallback, useMemo } from 'react'
 import { safeListing, SafeReservation, SafeUser } from '../types'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { useCountries } from '../hooks/useCountries'
 import { format } from 'date-fns'
 import Image from 'next/image'
 import HeaderButton from './HeaderButton'
 import Button from './Button'
+import axios from 'axios'
 
 interface ListingCardProps {
   data: safeListing,
@@ -69,6 +70,9 @@ const ListingCard = ({
   return (
     <div
       onClick={() => router.push(`/listings/${data.id}`)}
+      // onClick={() => {
+      //   window.location.href = "http://localhost:8080/api/create-qr"
+      // }}
       className='col-span-1 cursor-pointer group'>
       <div className='flex flex-col gap-2 w-full'>
         <div className='

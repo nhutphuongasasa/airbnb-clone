@@ -1,6 +1,5 @@
 "use client";
 
-import { signIn } from "next-auth/react";
 import React, { useCallback, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import Modal from "./Modal";
@@ -13,11 +12,14 @@ import { AiFillGithub } from "react-icons/ai";
 import useLoginModal from "@/hooks/useLoginModal";
 import { useRouter } from "next/navigation";
 import useRegisterModal from "../../hooks/useRegisterModal";
+import { signIn } from "next-auth/react";
+import userUserStore from "@/hooks/useUser";
 
 const LoginModal = () => {
   const router = useRouter()
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal()
+  const userStore = userUserStore()
   const [isLoading, setIsLoading] = useState(false);
   //register giup gan cac input,... voi he thong quan li react-hook-form
   //giup truyen cac rule nhu required, maxLength, ...
@@ -32,7 +34,7 @@ const LoginModal = () => {
   });
   // dung FieldValue de thay the cho viec tao Props
   const onSubmit: SubmitHandler<FieldValues> = data => {
-    //khi set loading = true thi disabled cung bang true lam cho button khong bam duoc nua
+    // khi set loading = true thi disabled cung bang true lam cho button khong bam duoc nua
     setIsLoading(true);
     signIn('credentials', {
       ...data,
@@ -52,6 +54,51 @@ const LoginModal = () => {
       }
     })
   };
+
+  const handleLoginWithGoogle = useCallback( async () => {
+    const popup = window.open(
+      "http://localhost:8080/api/auth/google",
+      "googleLogin",
+      "width=500,height=600"
+    )
+
+    const handleMessage = (event: MessageEvent) => {
+      console.log("Got message", event)
+      if(event.origin !== 'http://localhost:8080') return
+      toast.success("handle Message")
+
+      const {user, error} = event.data
+
+      if(error){
+        toast.error(error.message)
+        return
+      }
+
+      if ( user ) {
+        toast(user.id)
+        router.refresh();
+        loginModal.onClose();
+        userStore.onSet(user)
+      }
+      localStorage.setItem('user', JSON.stringify(user))
+    }
+
+    window.addEventListener('message',handleMessage)
+
+    const checkPopupClosed = setInterval(() => {
+      if(popup?.closed){
+        clearInterval(checkPopupClosed)
+        window.removeEventListener('message', handleMessage)
+        setIsLoading(false)
+        // loginModal.onClose()
+      }
+    },500)
+
+    return () => {
+      window.removeEventListener("message", handleMessage);
+      clearInterval(checkPopupClosed);
+    };
+  },[router, loginModal])
 
   const toggle = useCallback(() => {
     loginModal.onClose()
@@ -88,13 +135,18 @@ const LoginModal = () => {
         outline
         label="Continue with Google"
         icon={FcGoogle}
-        onClick={() => signIn('google')}
+        onClick={() => {
+          handleLoginWithGoogle()
+          //chuyen snag landing page
+        }}
+        
       />
       <Button
         outline
         label="Continue with Github"
         icon={AiFillGithub}
-        onClick={() => signIn('github')}
+        onClick={() => window.location.href  = "http://localhost:4000/auth/github"}
+        // onClick={() => signIn('github')}
       />
       <div className="gap-2 flex justify-center text-neutral-500 text-center mt-2 font-light">
         <div>First time using Airbnb? </div>

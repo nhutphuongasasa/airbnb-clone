@@ -9,6 +9,7 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png"
 import { MapContainer, Marker, TileLayer } from 'react-leaflet'
 import toast from 'react-hot-toast'
 
+
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
 L.Icon.Default.mergeOptions({
@@ -22,10 +23,6 @@ interface MapProps {
 }
 
 const Map = ({center}: MapProps) => {
-  if(!center){
-
-    toast.error("no value")
-  }
   return (
     <MapContainer 
       center={center as L.LatLngExpression || [51, -0.09]}
