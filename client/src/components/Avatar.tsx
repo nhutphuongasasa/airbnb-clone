@@ -6,7 +6,7 @@ interface AvatarProps {
 }
 
 const Avatar = ({ src }: AvatarProps) => {
-  console.log(src);
+  // console.log(src);
   return (
     <Image
       className="rounded-full"

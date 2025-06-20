@@ -11,7 +11,7 @@ export interface ICommandRepository<Entity>{
 }
 
 export interface IUseCase<CreateDTO, Cond, Response>{
-    create(data: CreateDTO): Promise<Response>,
+    create(data: CreateDTO): Promise<any>,
     getDetail(id: string): Promise<Response | null>,
     getList(cond: Cond): Promise<Response[] | null>,
 }

@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { IUseCase } from "../interface";
-import { UserCondDTO } from "../../modules/user/model/dto";
+// import { UserCondDTO } from "../../modules/user/model/dto";
 import { AppError } from "../model/error";
+import jwt, { JwtPayload } from 'jsonwebtoken'
 
 export abstract class BaseHttpService<CreateDTO, CondDTO, ResponseDTO>{
     constructor(readonly usecase: IUseCase<CreateDTO, CondDTO, ResponseDTO>){}
@@ -9,6 +10,16 @@ export abstract class BaseHttpService<CreateDTO, CondDTO, ResponseDTO>{
     async create(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             // console.log(req.body)
+            const accessToken = req.cookies.accessToken
+
+            if(accessToken){
+                console.log("co")
+                const user = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET!) as JwtPayload
+
+                req.body.userId = user.id
+            }
+            console.log(req.body)
+
             const result = await this.usecase.create(req.body);
             res.status(201).json({ data: result});
         } catch (error) {
@@ -30,22 +41,22 @@ export abstract class BaseHttpService<CreateDTO, CondDTO, ResponseDTO>{
         }
     }
 
-    async getList(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            const { success, error } = UserCondDTO.safeParse(req.query)
-            if (!success) {
-                res.status(400).json({
-                    message: error.message,
-                });
-                return;
-            }
-            const result = await this.usecase.getList(req.query as CondDTO);
+    // async getList(req: Request, res: Response, next: NextFunction): Promise<void> {
+    //     try {
+    //         const { success, error } = UserCondDTO.safeParse(req.query)
+    //         if (!success) {
+    //             res.status(400).json({
+    //                 message: error.message,
+    //             });
+    //             return;
+    //         }
+    //         const result = await this.usecase.getList(req.query as CondDTO);
 
-            res.status(200).json({ data: result })
-        } catch (error) {
-            next(error)
-        }
-    }
+    //         res.status(200).json({ data: result })
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
 
 }
 

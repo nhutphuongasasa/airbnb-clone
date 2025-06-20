@@ -1,6 +1,6 @@
+"use client"
 
-
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import getCurrentUser from '../actions/getCurrentUser'
 import ClientOnly from '@/components/ClientOnly'
 import EmptyState from '@/components/EmptyState'
@@ -8,9 +8,12 @@ import { getReservations } from '../actions/getReservations'
 import TripsClient from './PropertiesClient'
 import getListings from '../actions/getListings'
 import PropertiesClient from './PropertiesClient'
+import userUserStore from '@/hooks/useUser'
+import axios from 'axios'
 
-const PropertiesPage = async() => {
-    const currentUser = await getCurrentUser()
+const PropertiesPage = () => {
+    // const currentUser = await getCurrentUser()
+    const currentUser = userUserStore(state => state.currentUser)
 
     if (!currentUser){
         return (
@@ -20,22 +23,11 @@ const PropertiesPage = async() => {
         )
     }
 
-    const listings = await getListings({
-        userId: currentUser.id
-    })
-
-    if (listings.length === 0){
-        return (
-            <ClientOnly>
-                <EmptyState title='No trip found' subtitle='Looks like you have no properties'></EmptyState>
-            </ClientOnly>
-        )
-    }
-
   return (
     <ClientOnly>
         <PropertiesClient 
-            listings={listings} 
+            // fetchListing={fetchListing}
+            // listings={listings} 
             currentUser={currentUser}/>
     </ClientOnly>
   )

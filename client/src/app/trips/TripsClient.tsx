@@ -11,26 +11,31 @@ import toast from 'react-hot-toast'
 
 interface TripsClientProps {
   currentUser?: SafeUser | undefined,
-  reservations: SafeReservation[]
+  reservations: SafeReservation[],
+  fetchReservation: () => Promise<void>
 }
 
 const TripsClient = ({
   currentUser,
-  reservations
+  reservations,
+  fetchReservation
 }: TripsClientProps) => {
   const router = useRouter()
   const [deletingId, setDeletingId] = useState('')
 
-  const onCancel= useCallback((id: string) => {
+  const onCancel= useCallback(async(id: string) => {
     setDeletingId(id)
 
-    axios.delete(`/api/reservations/${id}`)
-    .then(() => {
+    await axios.delete(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reservation/${id}`,{
+      withCredentials: true
+    })
+    .then(async() => {
+      await fetchReservation()
       toast.success("Reservation deleted")
       router.refresh()
-    })
+    }) 
     .catch((error) => {
-      toast.error(error?.response?.data?.error)
+      // toast.error(error?.response?.data?.error)
     })
     .finally(() => {
       setDeletingId("")

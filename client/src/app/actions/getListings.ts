@@ -15,7 +15,7 @@ export default async function getListings(
   params: IListingsParams) {
   try {
     const resolvedParams = await params; // Thêm dòng này nếu params là Promise
-console.log("get lsitinh")
+// console.log("get lsitinh")
     const {
       userId,
       guestCount,

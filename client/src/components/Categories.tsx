@@ -273,7 +273,7 @@ const Categories = () => {
   }
 
   return (
-    <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
+    <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 mt-3">
       <div className="relative pt-1">
         {/* Left scroll button */}
         {showLeftArrow && (

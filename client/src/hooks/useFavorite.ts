@@ -1,21 +1,24 @@
 import { useRouter } from "next/navigation";
-import { SafeUser } from "../types";
+// import { SafeUser } from "../types";
 import useLoginModal from "./useLoginModal";
 import { useCallback, useMemo } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+// import { fetchProfile } from "./useProfile";
+import userUserStore from "./useUser";
 
 interface IUseFavorite {
   listingId: string,
-  currentUser?: SafeUser | null
 }
 
 export const useFavorite = ({
   listingId,
-  currentUser
 }: IUseFavorite) => {
   const router = useRouter()
   const loginModal = useLoginModal()
+
+  const onSetUser = userUserStore()
+  const currentUser = userUserStore(state => state.currentUser)
 
   const hasFavorited = useMemo(() => {
     const list = currentUser?.favoriteIds || []
@@ -33,19 +36,27 @@ export const useFavorite = ({
     }
 
     try {
-      let request
 
       if (hasFavorited){
-        request = () => axios.delete(`/api/favorites/${listingId}`)
+        const request =  await axios.delete(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/favorites/${listingId}`,{
+          withCredentials: true
+        }).then((res) => {
+          // console.log(res.data)
+          onSetUser.onSet(res.data)
+        })
+        
       }else{
-        request = () => axios.post(`/api/favorites/${listingId}`)
+        const request1 = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/favorites/${listingId}`,{},{
+          withCredentials: true
+        }).then((res) => {
+          // console.log(res.data)
+          onSetUser.onSet(res.data)
+        })
       }
-
-      await request()
       router.refresh()
       toast.success("Success")
     } catch (error) {
-      toast.error('Sone thing went wrong'+error)
+      // toast.error('Sone thing went wrong'+error)
     }
   },[currentUser, hasFavorited, listingId, loginModal, router])
 

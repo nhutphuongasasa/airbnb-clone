@@ -16,6 +16,14 @@ import { signIn } from "next-auth/react";
 import userUserStore from "@/hooks/useUser";
 
 const LoginModal = () => {
+  const width = 500;
+  const height = 600;
+
+  const left = window.screenX + (window.outerWidth - width) / 2;
+  const top = window.screenY + (window.outerHeight - height) / 2.5;
+
+
+
   const router = useRouter()
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal()
@@ -50,16 +58,17 @@ const LoginModal = () => {
       }
 
       if(callback?.error){
-        toast.error(callback.error)
+        // toast.error(callback.error)
       }
     })
   };
 
   const handleLoginWithGoogle = useCallback( async () => {
     const popup = window.open(
-      "http://localhost:8080/api/auth/google",
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/google`,
       "googleLogin",
-      "width=500,height=600"
+      // "width=500,height=600"
+      `width=${width},height=${height},left=${left},top=${top}`
     )
 
     const handleMessage = (event: MessageEvent) => {
@@ -70,12 +79,12 @@ const LoginModal = () => {
       const {user, error} = event.data
 
       if(error){
-        toast.error(error.message)
+        // toast.error(error.message)
         return
       }
 
       if ( user ) {
-        toast(user.id)
+        // toast(user.id)
         router.refresh();
         loginModal.onClose();
         userStore.onSet(user)

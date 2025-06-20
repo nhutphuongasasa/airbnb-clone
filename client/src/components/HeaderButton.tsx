@@ -16,7 +16,6 @@ const HeaderButton = ({
 }: HeaderButtonProps) => {
   const { hasFavorited, toggleFavorite } = useFavorite({
     listingId,
-    currentUser
   })
 
   return (
@@ -27,7 +26,7 @@ const HeaderButton = ({
         hover:opacity-80
         transition
         cursor-pointer
-        z-20
+
       '>
       <AiOutlineHeart
         size={28}

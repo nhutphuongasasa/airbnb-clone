@@ -42,7 +42,7 @@ const RegisterModal = () => {
         loginModal.onOpen()
       })
       .catch(error => {
-        toast.error("Something went wrong"+ error);
+        // toast.error("Something went wrong"+ error);
       })
       .finally(() => {
         setIsLoading(false);

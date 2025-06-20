@@ -25,12 +25,13 @@ export const UserResponseSchema = z.object({
     name: z.string(),
     email: z.string().email("Invalid email address"),
     image: z.string().url().optional(),
+    favoriteIds: z.array(z.string())
 })
 
 export type UserResponse = z.infer<typeof UserResponseSchema>
 
 export const HostResponseSchema = z.object({
-    user: z.string().uuid(),
+    user: z.string(),
     name: z.string(),
     email: z.string().email("Invalid email address"),
     image: z.string().url().optional(),

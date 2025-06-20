@@ -10,6 +10,7 @@ import LoginModal from "@/components/Modals/LoginModal";
 import getCurrentUser from "./actions/getCurrentUser";
 import RentModal from "../components/Modals/RentModal";
 import SearchModal from "@/components/Modals/SearchModal";
+import Footer from "@/components/Footer";
 
 
 export const metadata: Metadata = {
@@ -37,11 +38,12 @@ export default async function RootLayout({
           <RegisterModal/>
           <SearchModal></SearchModal>
           <LoginModal/>
-        <Navbar currentUser={currentUser}/>
-        </ClientOnly>
+        <Navbar/>
         <div className="pb-20 pt-28">
         {children}
         </div>
+        <Footer/>
+        </ClientOnly>
       </body>
     </html>
   );

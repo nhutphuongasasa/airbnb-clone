@@ -8,7 +8,7 @@ import React, { useMemo } from "react";
 import { BiSearch } from "react-icons/bi";
 
 const Search = () => {
-  const searchModal = useSearchModal()
+  // const searchModal = useSearchModal()
   const params = useSearchParams()
   const { getByValue } = useCountries()
 
@@ -37,7 +37,7 @@ const Search = () => {
       return `${diff} Days`;
     }
 
-    return 'AnyWhere'
+    return 'Any Week'
 
   },[startDate, endDate]);
 
@@ -51,7 +51,7 @@ const Search = () => {
   },[guestCount])
 
   return (
-    <div onClick={searchModal.onOpen} className="border-[1px] w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer">
+    <div className="border-[1px] w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer">
       <div className="flex flex-row items-center justify-between">
         <div className="text-sm font-semibold px-6">
           {locationLabel ? locationLabel : 'Any Where'}

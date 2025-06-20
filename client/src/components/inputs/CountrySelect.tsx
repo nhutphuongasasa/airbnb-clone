@@ -29,7 +29,7 @@ const CountrySelect = ({value, onChange }: CountrySelectProps) => {
       value={value}
       onChange={(value) => {
         if(!value.latlng){
-          toast.error("no latlng")
+          // toast.error("no latlng")
         }
         onChange(value as CountrySelectValue)
       }}

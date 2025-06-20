@@ -86,11 +86,11 @@ const RentModal = () => {
     })
   }
   
-  useEffect(() => {
-    if (currentUser?.id) {
-      setCustomValue('userId', currentUser.id)
-    }
-  }, [currentUser?.id])
+  // useEffect(() => {
+  //   if (currentUser?.id) {
+  //     setCustomValue('userId', currentUser.id)
+  //   }
+  // }, [currentUser?.id])
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (step !== STEPS.PRICE){
@@ -134,7 +134,9 @@ const RentModal = () => {
 
 
     // axios.post('/api/listings', data)
-    axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/listing`, data)
+    axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/listing`, data,{
+      withCredentials: true
+    })
     .then(() => {
       toast.success("Listings Created")
       router.refresh()

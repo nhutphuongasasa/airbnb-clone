@@ -10,9 +10,11 @@ export const  setupListingModule = () => {
 
     const router = Router()
 
+    router.get("/me", httpService.getListMe.bind(httpService))
     router.get("/:id", httpService.getDetail.bind(httpService))
     router.post("/", httpService.create.bind(httpService))
     router.get("/", httpService.getList.bind(httpService))
+    router.delete("/:id", httpService.deleteListing.bind(httpService))
 
     return router
 }

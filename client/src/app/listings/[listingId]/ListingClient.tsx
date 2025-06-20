@@ -5,6 +5,7 @@ import Container from '@/components/Container'
 import ListingHead from '@/components/ListingHead'
 import ListingInfo from '@/components/ListingInfo'
 import ListingReservation from '@/components/ListingReservation'
+import { useCheckoutStore } from '@/hooks/useCheckout'
 import useLoginModal from '@/hooks/useLoginModal'
 import { safeListing, SafeReservation, SafeUser } from '@/types'
 import { Reservation } from '@prisma/client'
@@ -15,6 +16,7 @@ import { useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Range } from 'react-date-range'
 import toast from 'react-hot-toast'
+import { persist } from 'zustand/middleware'
 
 const initialDateRange = {
     startDate: new Date(),
@@ -65,22 +67,34 @@ const ListingClient = ({
 
         setIsLoading(true)
 
-        axios.get('/api/create_payment_url')
+        // axios.get('/api/create_payment_url')
 
-        axios.post('/api/reservations', {
-            totalPrice,
-            startDate: dateRange.startDate,
-            endDate: dateRange.endDate,
-            listingId: listing?.id
-        }).then(() => {
-            toast.success("Listing reserved!")
-            setDateRange(initialDateRange)
-            router.push("/trips")
-        }).catch(() => {
-            toast.error("Something went wrong!")
-        }).finally(() => {
-            setIsLoading(false)
+        // axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reservation`, {
+        //     totalPrice,
+        //     startDate: dateRange.startDate,
+        //     endDate: dateRange.endDate,
+        //     listingId: listing?.id
+        // }, {
+        //     withCredentials: true
+        // }).then(() => {
+        //     toast.success("Listing reserved!")
+        //     setDateRange(initialDateRange)
+        //     router.push("/trips")
+        // }).catch(() => {
+        //     toast.error("Something went wrong!")
+        // }).finally(() => {
+        //     setIsLoading(false)
+        // })
+
+
+        useCheckoutStore.getState().setData({
+            listingId: listing.id,
+            totalPrice: totalPrice,
+            dateRange: dateRange,
+            listing: listing
         })
+
+        router.replace(`/checkout?listingId=${listing.id}`)
     }, [
         totalPrice,
         dateRange,

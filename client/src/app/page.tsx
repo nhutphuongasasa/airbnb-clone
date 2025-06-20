@@ -8,10 +8,11 @@ import ListingCard from "../components/ListingCard";
 import getCurrentUser from "./actions/getCurrentUser";
 import getListings, { IListingsParams } from "./actions/getListings";
 import userUserStore from "@/hooks/useUser";
-import { safeListing } from "@/types";
+import { safeListing, SafeUser } from "@/types";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useSearchParams } from "next/navigation";
 
 interface HomeProps {
   searchParams: IListingsParams
@@ -19,29 +20,43 @@ interface HomeProps {
 
 export default  function Home({searchParams}: HomeProps) {
   // const listings = await getListings(searchParams)
+
+  // const [currentUser, setCurrentUser] = useState<SafeUser>()
+  const useUser = userUserStore()
   const currentUser = userUserStore(state => state.currentUser)
+
   const [listings, setListings] = useState<safeListing[]>([])
 
+  const searchParam = useSearchParams()
+
   useEffect(() => {
+    // console.log(currentUser)
     const fetchListings = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/listing`);
-        console.log("Fetched listings response:", res.data);
+        if(!searchParam){
+          return
+        }
+        const queryObj = Object.fromEntries(searchParam.entries())
+        const queryString = new URLSearchParams(queryObj).toString()
+
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/listing?${queryString}`);
+        // console.log("Fetched listings response:", res.data);
         setListings(res.data.data)
       } catch {
-        toast.error("wrong listing page")
+        // toast.error("wrong listing page")
       }
     }
     fetchListings()
-  }, [])
+  }, [searchParams])
 
 
   if (listings.length === 0){
     return (
       <ClientOnly>
+            <Categories></Categories>
         <EmptyState showReset>
         </EmptyState>
-          <h1>Nolsiinth</h1>
+          {/* <h1>Nolsiinth</h1> */}
       </ClientOnly>
     )
   }
@@ -49,7 +64,6 @@ export default  function Home({searchParams}: HomeProps) {
   return (
     <div>
     <Categories></Categories>
-
     <ClientOnly>
       <Container>
         <div className="

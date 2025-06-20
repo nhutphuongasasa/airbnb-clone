@@ -52,7 +52,7 @@ cloudinary.config({
 
 // Kiểm tra cấu hình Cloudinary
 if (!cloudinary.config().cloud_name) {
-  console.error('Cloudinary config is missing!');
+  // console.error('Cloudinary config is missing!');
 }
 
 // pages/api/sign-cloudinary-params.ts

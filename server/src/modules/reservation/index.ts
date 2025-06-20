@@ -15,6 +15,7 @@ export const setupReservationModule = () => {
     router.get("/", httpService.getList.bind(httpService))
     router.get("/:id", httpService.getDetail.bind(httpService))
     router.post("/", httpService.create.bind(httpService))
+    router.delete("/:id", httpService.delete.bind(httpService))
 
     return router
 }

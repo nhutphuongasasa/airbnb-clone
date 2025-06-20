@@ -59,15 +59,24 @@ export const ListingReservationSchema = z.object({
 export type ListingReservation = z.infer<typeof ListingReservationSchema>
 
 export const ListingCondDTOSchema = z.object({
+    id: z.array(z.string()).optional().nullable(),
+
     userId: z.string().optional(),
     category: z.string().optional(),
-    roomCount: z.number().int().min(1, "Room count must be at least 1").optional(),
-    bathroomCount: z.number().int().min(1, "Bathroom count must be at least 1").optional(),
-    guestCount: z.number().int().min(1, "Guest count must be at least 1").optional(),
+    // roomCount: z.number().int().min(1, "Room count must be at least 1").optional(),
+    // bathroomCount: z.number().int().min(1, "Bathroom count must be at least 1").optional(),
+    // guestCount: z.number().int().min(1, "Guest count must be at least 1").optional(),
+    // localVale: z.string().optional(),
+    // price: z.number().min(0, "Price must be a positive number").optional(),
+    // startDate: z.date().optional(),
+    // endDate: z.date().optional(),
+    roomCount: z.coerce.number().int().min(1, "Room count must be at least 1").optional(),
+    bathroomCount: z.coerce.number().int().min(1, "Bathroom count must be at least 1").optional(),
+    guestCount: z.coerce.number().int().min(1, "Guest count must be at least 1").optional(),
     localVale: z.string().optional(),
-    price: z.number().min(0, "Price must be a positive number").optional(),
-    startDate: z.date().optional(),
-    endDate: z.date().optional(),
+    price: z.coerce.number().min(0, "Price must be a positive number").optional(),
+    startDate: z.coerce.date().optional(),
+    endDate: z.coerce.date().optional(),
 })
 
 export type ListingCondDTO = z.infer<typeof ListingCondDTOSchema>;

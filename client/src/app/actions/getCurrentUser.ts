@@ -12,19 +12,6 @@ export async function getSession() {
 
 export default async function getCurrentUser() {
   try {
-    // const session = await getSession();
-
-    // if (!session?.user?.email) {
-    //   return null;
-    // }
-    // //lay dud lieu trong db thong qua prisma
-    // const currentUser = await prisma.user.findUnique({
-    //   where: {
-    //     email: session.user.email as string
-    //   }
-    // });
-
-    
 
     const res = await axios.get(`${process.env.SERVER_URL}/api/auth/profile`,{
       withCredentials: true

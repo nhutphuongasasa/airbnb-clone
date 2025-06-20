@@ -123,7 +123,7 @@ const ListingCard = ({
               disabled={disabled}
               small
               label={actionLabel}
-              onClick={() => handleCancel}
+              onClick={(e) => handleCancel(e)}
             />
           )}
       </div>

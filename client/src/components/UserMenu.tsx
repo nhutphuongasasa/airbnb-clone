@@ -21,7 +21,7 @@ interface UserMenuProps {
   currentUser?: SafeUser | null
 }
 
-const UserMenu = ({ currentUse1r }: UserMenuProps) => {
+const UserMenu = () => {
   const router = useRouter()
   const userStore = userUserStore()
   const currentUser = userUserStore(state => state.currentUser)
@@ -60,7 +60,7 @@ const handleLogout = async () => {
         // window.location.reload()
         setIsOpen(false);
       }else {
-        toast.error("error");
+        // toast.error("error");
       }
   } catch (error) {
       console.error("Logout error:", error); // Log lỗi chi tiết
@@ -97,7 +97,7 @@ const handleLogout = async () => {
               <>
                 <MenuItems onClick={() => router.push("/trips")} label="My Trips"></MenuItems>
                 <MenuItems onClick={()=> router.push("/favorites")} label="My Favorite"></MenuItems>
-                <MenuItems onClick={()=> router.push("/reservations")} label="My Reservation"></MenuItems>
+                {/* <MenuItems onClick={()=> router.push("/reservations")} label="My Reservation"></MenuItems> */}
                 <MenuItems onClick={()=> router.push("/properties")} label="My Properties"></MenuItems>
                 <MenuItems onClick={rentModal.onOpen } label="Airbnb My Home"></MenuItems>
                 <hr></hr>

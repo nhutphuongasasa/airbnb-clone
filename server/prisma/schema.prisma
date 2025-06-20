@@ -22,12 +22,12 @@ model User {
   hashedPassword String?
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
-  favoriteIds String[] @db.ObjectId
+  favoriteIds String[] @db.ObjectId @default([])
 
   accounts Account[]
   listings Listing[]
   reservations Reservation[]
-  // payments Payment[]
+  payments Payment[]
 }
 
 model Account {
@@ -46,7 +46,7 @@ model Account {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId])// chi dinh 2 thuoc tinh lam khoa duy nhat khong ton tai 1 cap khoa tung tu 
+  @@unique([provider, providerAccountId])
 }
 
 model Listing{
@@ -67,6 +67,12 @@ model Listing{
   reservations Reservation[]
 }
 
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
 model Reservation {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   userId String @db.ObjectId
@@ -74,6 +80,7 @@ model Reservation {
   startDate DateTime 
   endDate DateTime
   totalPrice Int
+  status ReservationStatus @default(PENDING)
   createAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -82,17 +89,17 @@ model Reservation {
 
 model Payment {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String 
-  orderId        String   // vnp_TxnRef
-  amount         Float    // Đơn vị: VND
-  orderInfo      String   // vnp_OrderInfo
-  bankCode       String   // vnp_BankCode
-  payDate        String   // vnp_PayDate (yyyyMMddHHmmss)
-  transactionNo  String   @unique // vnp_TransactionNo
-  cardType       String   // vnp_CardType
-  status         String   // SUCCESS | FAILED
+  userId String  @db.ObjectId
+  ReservationId  String @db.ObjectId   
+  amount         Float    
+  orderInfo      String   
+  bankCode       String   
+  payDate        String   
+  transactionNo  String   @unique 
+  cardType       String   
+  status         String   
   createdAt      DateTime @default(now())
 
-  // user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
