@@ -43,11 +43,32 @@ export const setupGoogleStrategy = () => {
 
 export const setupGithubStrategy = () => {
     passport.use(new GithubStrategy({
-        clientID: process.env.GITHUB_ID! as string,
-        clientSecret: process.env.GITHUB_SECRET! as string,
-        callbackURL: `/api/auth/callback/github`
-    }, (accessToken, refreshToken, profile, done) => {
-        // Xử lý user profile
-        done(null, profile);
+      clientID: process.env.GITHUB_ID!,
+      clientSecret: process.env.GITHUB_SECRET!,
+      callbackURL: `http://localhost:8080/api/auth/callback/github`
+    }, async (accessToken, refreshToken, profile, cb) => {
+      const email = profile.emails?.[0]?.value || `${profile.username}@github.com`; // fallback email
+      const name = profile.displayName || profile.username;
+      const image = profile.photos?.[0]?.value;
+  
+      let user = await prisma.user.findUnique({ where: { email } });
+  
+      if (!user) {
+        user = await prisma.user.create({
+          data: {
+            email,
+            name,
+            image,
+            emailVerified: null,
+          }
+        });
+      }
+  
+      return cb(null, {
+        ...user,
+        createdAt: user.createdAt?.toISOString(),
+        updatedAt: user.updatedAt?.toISOString(),
+        emailVerified: user.emailVerified?.toISOString() || null,
+      });
     }));
-}
+  };
