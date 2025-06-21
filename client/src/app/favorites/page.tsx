@@ -3,7 +3,7 @@
 import ClientOnly from '@/components/ClientOnly'
 import EmptyState from '@/components/EmptyState'
 import React, { useEffect, useState } from 'react'
-import { getFavoriteListings } from '../actions/getFavoriteListing'
+// import { getFavoriteListings } from '../actions/getFavoriteListing'
 import getCurrentUser from '../actions/getCurrentUser'
 import FavoritesCLient from './FavoritesCLient'
 import userUserStore from '@/hooks/useUser'

@@ -2,12 +2,12 @@ import { getServerSession } from "next-auth/next";
 
 // import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
-import prisma from "../../libs/prismadb";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
+// import prisma from "../../libs/prismadb";
+// import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import axios from "axios";
 
 export async function getSession() {
-  return await getServerSession(authOptions);
+  // return await getServerSession(authOptions);
 }
 
 export default async function getCurrentUser() {

@@ -31,22 +31,40 @@ const RegisterModal = () => {
     }
   });
   // dung FieldValue de thay the cho viec tao Props
-  const onSubmit: SubmitHandler<FieldValues> = data => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
 
-    axios
-      .post("/api/register", data)
-      .then(() => {
-        toast.success("Success")
-        registerModal.onClose();
+    try {
+      const result = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/register`,{
+        name: data.name,    
+        email: data.email,
+        password: data.password
+      }).catch((error) => {
+          toast.error("Something went wrong")
+      })
+      registerModal.onClose();
         loginModal.onOpen()
-      })
-      .catch(error => {
-        // toast.error("Something went wrong"+ error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    } catch (error) {
+      console.log(error)
+    }
+
+
+
+    setIsLoading(false)
+
+    // axios
+    //   .post("/api/register", data)
+    //   .then(() => {
+    //     toast.success("Success")
+    //     registerModal.onClose();
+    //     loginModal.onOpen()
+    //   })
+    //   .catch(error => {
+    //     // toast.error("Something went wrong"+ error);
+    //   })
+    //   .finally(() => {
+    //     setIsLoading(false);
+    //   });
   };
 
     const toggle = useCallback(() => {

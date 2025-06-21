@@ -1,0 +1,259 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Laptop Store API",
+    "version": "1.0.0",
+    "description": "API documentation for Laptop Store"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "paths": {
+    "/api/auth/google": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Đăng nhập với Google (chuyển hướng đến Google OAuth)"
+      }
+    },
+    "/api/auth/github": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Xử lý callback từ GitHub OAuth"
+      }
+    },
+    "/api/auth/callback/google": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Xử lý callback từ Google OAuth"
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Đăng nhập bằng email và mật khẩu",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Đăng ký tài khoản mới"
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Đăng xuất"
+      }
+    },
+    "/api/listing/me": {
+      "get": {
+        "tags": [
+          "Listings"
+        ],
+        "summary": "Lấy danh sách listing của chính người dùng (current user)"
+      }
+    },
+    "/api/listing/{id}": {
+      "get": {
+        "tags": [
+          "Listings"
+        ],
+        "summary": "Lấy chi tiết một listing theo ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Listings"
+        ],
+        "summary": "Xoá một listing theo ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/listing": {
+      "post": {
+        "tags": [
+          "Listings"
+        ],
+        "summary": "Tạo một listing mới",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Listings"
+        ],
+        "summary": "Lấy danh sách tất cả listing"
+      }
+    },
+    "/api/reservation": {
+      "get": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Lấy danh sách tất cả reservations"
+      },
+      "post": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Tạo mới một reservation"
+      }
+    },
+    "/api/reservation/{id}": {
+      "get": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Lấy chi tiết một reservation"
+      },
+      "delete": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Xoá reservation theo id"
+      }
+    },
+    "/api/user/profile": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get user profile"
+      }
+    },
+    "/api/user": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Create a new user"
+      }
+    },
+    "/api/user/favorites/{id}": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Add listing to favorites"
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Remove listing from favorites"
+      }
+    },
+    "/api/user/favorites": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get all favorite listings"
+      }
+    },
+    "/api/create-qr": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Tạo link thanh toán VNPay cho đơn đặt phòng",
+        "responses": {
+          "200": {
+            "description": "Thành công, trả về URL thanh toán"
+          }
+        }
+      }
+    },
+    "/api/vnpay_ipn": {
+      "get": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Xử lý callback từ VNPay sau thanh toán",
+        "responses": {
+          "200": {
+            "description": "Xác nhận trạng thái thanh toán từ VNPay"
+          }
+        }
+      }
+    }
+  },
+  "components": {},
+  "tags": []
+}

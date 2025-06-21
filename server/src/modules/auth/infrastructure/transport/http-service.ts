@@ -12,7 +12,10 @@ export class AuthHttpService{
             const {email, password} = req.body
             const result = await this.authUseCase.Login(email, password)
 
-            res.json(result)
+            console.log(result)
+            res.json({
+                data: result
+            })
         } catch (error) {
             next(error)
         }

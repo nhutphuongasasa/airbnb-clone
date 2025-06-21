@@ -22,6 +22,9 @@ import moment from 'moment'
 import { VNPay, ignoreLogger, ProductCode, VnpLocale, dateFormat, VerifyIpnCall, HashAlgorithm, consoleLogger, IpnSuccess, VerifyReturnUrl, IpnFailChecksum, IpnUnknownError, IpnOrderNotFound, IpnInvalidAmount, InpOrderAlreadyConfirmed, ReturnQueryFromVNPay } from 'vnpay';
 import { promises } from 'dns';
 // import jwt from 'jsonwebtoken'
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './swagger';
+import fs from 'fs';
 
 dotenv.config()
 
@@ -71,7 +74,17 @@ const vnpay = new VNPay({
 const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 
-
+/**
+ * @openapi
+ * /api/create-qr:
+ *   post:
+ *     tags:
+ *       - Payments
+ *     summary: Tạo link thanh toán VNPay cho đơn đặt phòng
+ *     responses:
+ *       200:
+ *         description: Thành công, trả về URL thanh toán
+ */
 app.post('/api/create-qr', async (req: Request, res: Response, next: NextFunction): Promise<any> => {
   // console.log("oke")
 
@@ -107,6 +120,18 @@ app.post('/api/create-qr', async (req: Request, res: Response, next: NextFunctio
   return res.json({paymentUrl})
 });
 
+
+/**
+ * @openapi
+ * /api/vnpay_ipn:
+ *   get:
+ *     tags:
+ *       - Payments
+ *     summary: Xử lý callback từ VNPay sau thanh toán
+ *     responses:
+ *       200:
+ *         description: Xác nhận trạng thái thanh toán từ VNPay
+ */
 app.get('/api/vnpay_ipn', async (req: Request, res: Response): Promise<any> => {
   try {
     console.log("return")
@@ -304,6 +329,10 @@ app.use("/api/reservation", setupReservationModule())
 app.use(errorHandler)
 
 const PORT = 8080
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+fs.writeFileSync('./swagger-output.json', JSON.stringify(swaggerSpec, null, 2));
 
 app.listen(PORT, () =>{
     console.log("oke")

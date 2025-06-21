@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import useRegisterModal from "../../hooks/useRegisterModal";
 import { signIn } from "next-auth/react";
 import userUserStore from "@/hooks/useUser";
+import axios from "axios";
 
 const LoginModal = () => {
   const width = 500;
@@ -41,26 +42,42 @@ const LoginModal = () => {
     }
   });
   // dung FieldValue de thay the cho viec tao Props
-  const onSubmit: SubmitHandler<FieldValues> = data => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     // khi set loading = true thi disabled cung bang true lam cho button khong bam duoc nua
     setIsLoading(true);
-    signIn('credentials', {
-      ...data,
-      redirect: false
-    })
-    .then((callback) => {
-      setIsLoading(false)
-      
-      if(callback?.ok){
-        toast.success('Logged In')
-        router.refresh()
-        loginModal.onClose()
-      }
 
-      if(callback?.error){
-        // toast.error(callback.error)
-      }
-    })
+    try {
+      const result = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/login`,{
+        email: data.email,
+        password: data.password
+      })
+      console.log(result)
+
+      userStore.onSet(result.data.data)
+      loginModal.onClose()
+
+    } catch (error) {
+      console.log(error)
+    }
+    setIsLoading(false);
+
+    // signIn('credentials', {
+    //   ...data,
+    //   redirect: false
+    // })
+    // .then((callback) => {
+    //   setIsLoading(false)
+      
+    //   if(callback?.ok){
+    //     toast.success('Logged In')
+    //     router.refresh()
+    //     loginModal.onClose()
+    //   }
+
+    //   if(callback?.error){
+    //     // toast.error(callback.error)
+    //   }
+    // })
   };
 
   const handleLoginWithGoogle = useCallback( async () => {
@@ -154,7 +171,7 @@ const LoginModal = () => {
         outline
         label="Continue with Github"
         icon={AiFillGithub}
-        onClick={() => window.location.href  = "http://localhost:4000/auth/github"}
+        onClick={() => window.location.href  = "http://localhost:8080/auth/github"}
         // onClick={() => signIn('github')}
       />
       <div className="gap-2 flex justify-center text-neutral-500 text-center mt-2 font-light">

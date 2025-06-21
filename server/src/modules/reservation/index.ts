@@ -12,10 +12,51 @@ export const setupReservationModule = () => {
 
     const router = Router()
 
-    router.get("/", httpService.getList.bind(httpService))
-    router.get("/:id", httpService.getDetail.bind(httpService))
-    router.post("/", httpService.create.bind(httpService))
-    router.delete("/:id", httpService.delete.bind(httpService))
+    // router.get("/", httpService.getList.bind(httpService))
+    // router.get("/:id", httpService.getDetail.bind(httpService))
+    // router.post("/", httpService.create.bind(httpService))
+    // router.delete("/:id", httpService.delete.bind(httpService))
+    
+    /**
+ * @openapi
+ * /api/reservation:
+ *   get:
+ *     tags:
+ *       - Reservations
+ *     summary: Lấy danh sách tất cả reservations
+ */
+router.get("/", httpService.getList.bind(httpService));
+
+/**
+ * @openapi
+ * /api/reservation/{id}:
+ *   get:
+ *     tags:
+ *       - Reservations
+ *     summary: Lấy chi tiết một reservation
+ */
+router.get("/:id", httpService.getDetail.bind(httpService));
+
+/**
+ * @openapi
+ * /api/reservation:
+ *   post:
+ *     tags:
+ *       - Reservations
+ *     summary: Tạo mới một reservation
+ */
+router.post("/", httpService.create.bind(httpService));
+
+/**
+ * @openapi
+ * /api/reservation/{id}:
+ *   delete:
+ *     tags:
+ *       - Reservations
+ *     summary: Xoá reservation theo id
+ */
+router.delete("/:id", httpService.delete.bind(httpService));
+
 
     return router
 }
