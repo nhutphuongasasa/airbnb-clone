@@ -4,6 +4,7 @@ import { userUseCase } from "../user/index"
 import { ReservationRepository } from "./infrastructure/repository"
 import { ReservationHttpService } from "./infrastructure/transport/http-service"
 import { ReservationUseCase } from "./usecase"
+import { authMiddleware } from "../../shared/middleware/auth"
 
 export const setupReservationModule = () => {
     const repository = new ReservationRepository() 
@@ -85,7 +86,7 @@ export const setupReservationModule = () => {
  *         description: Không tìm thấy dữ liệu
  */
 
-router.get("/", httpService.getList.bind(httpService));
+router.get("/",authMiddleware, httpService.getList.bind(httpService));
 
 /**
  * @openapi
@@ -205,7 +206,7 @@ router.get("/:id", httpService.getDetail.bind(httpService));
  *         description: Không tìm thấy user hoặc listing
  */
 
-router.post("/", httpService.create.bind(httpService));
+router.post("/",authMiddleware, httpService.create.bind(httpService));
 
 /**
  * @openapi
